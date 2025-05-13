@@ -7,7 +7,7 @@ st.set_page_config(page_title="Merced College Q&A", page_icon="🎓", initial_si
 
 # Add logo in the upper right corner
 st.markdown("""
-<img src="https://mvdataappstorageuscaprod.blob.core.windows.net/medialibrary-030d9bbc552a4bb7af67b52fea9fce90-r/837e62db07e24c4995e59cb5c707c6ff/837e62db07e24c4995e59cb5c707c6ff/Large/MCC_FNL_Logos.png?text=Logo" style="position: absolute; top: 20px; right: 20px; width: 80px; z-index: 1000;">
+<img src="https://tse1.mm.bing.net/th?id=OIP.pNEM7h55D59uT7nInf00mAHaEO?text=Logo" style="position: absolute; top: 20px; right: 20px; width: 80px; z-index: 1000;">
 """, unsafe_allow_html=True)
 
 # Custom CSS with updated styling
