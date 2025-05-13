@@ -13,11 +13,6 @@ st.markdown("""
 # Custom CSS with updated styling
 st.markdown("""
 <style>
-  /* Import fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
-
   /* Yellow background behind the app container */
   .stApp {
     background-color: yellow !important;
@@ -36,29 +31,37 @@ st.markdown("""
   }
 
   /* Global font */
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
   body, .stApp, p, div, h1, h2, h3, span, .stMarkdown, .stTextInput, input {
     font-family: 'Source Serif 4', serif !important;
   }
 
-  /* Fancy intro text */
+  /* Bebas Neue for intro text */
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
   .bebas-text {
     font-family: 'Bebas Neue', sans-serif !important;
     font-size: 24px;
     line-height: 1.2;
   }
 
-  /* Buttons: default light gray */
-  .stButton > button:not([kind="formSubmit"]) {
-    background-color: #f0f0f0 !important;
-    color: #000 !important;
-    border-color: #ccc !important;
+  /* DM Sans for buttons */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
+  .stButton > button {
+    font-family: 'DM Sans', sans-serif !important;
   }
 
-  /* “Submit” button: dark blue */
-  button[kind="formSubmit"] {
+  /* 1) All buttons light gray by default */
+  .stButton > button:not([aria-label="Submit"]) {
+    background-color: #f0f0f0 !important;
+    color: #000 !important;
+    border: 1px solid #ccc !important;
+  }
+
+  /* 2) Only the Submit button dark blue */
+  .stButton > button[aria-label="Submit"] {
     background-color: #000080 !important;
-    color: white !important;
-    border-color: #000080 !important;
+    color: #fff !important;
+    border: 1px solid #000080 !important;
   }
 </style>
 """, unsafe_allow_html=True)
