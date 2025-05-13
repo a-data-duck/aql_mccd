@@ -29,11 +29,13 @@ st.markdown("""
         background-color: white;
         border-radius: 5px;
         position: relative;
+        max-width: 900px;
+        margin: 0 auto;
     }
     
     .stApp {
         background-color: yellow !important;
-        padding: 10px;
+        padding: 20px;
     }
     
     /* Default font for all elements (Source Serif 4) */
@@ -55,7 +57,7 @@ st.markdown("""
     
     /* Blue submit button */
     form button[kind="primaryFormSubmit"] {
-        background-color: blue !important;
+        background-color: #000080 !important; /* Dark blue */
         color: white !important;
     }
     
