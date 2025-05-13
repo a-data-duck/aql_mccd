@@ -24,7 +24,7 @@ st.markdown("""
     
     /* Main app container with border and yellow background outside */
     .main .block-container {
-        max-width: 900px;
+        max-width: 60%;
         margin: 0 auto;
         border: 3px solid #333;
         padding: 30px;
@@ -56,22 +56,21 @@ st.markdown("""
         font-family: 'DM Sans', sans-serif !important;
     }
     
-    /* Blue submit button */
+    /* DM Sans for example buttons */
     .stButton > button {
         font-family: 'DM Sans', sans-serif !important;
     }
     
-    /* Dark blue submit button - more specific selector */
-    button[data-testid="baseButton-secondary"] {
-        background-color: #000080 !important; 
+    /* Only make the Submit button dark blue - using the text content as selector */
+    .stButton > button:contains("Submit") {
+        background-color: #000080 !important;
         color: white !important;
+        border-color: #000080 !important;
     }
     
-    /* Make sure the Submit button is dark blue with high specificity */
-    .stButton > button:nth-child(1),
-    .stButton > button[kind="primaryFormSubmit"],
-    .stButton > button:last-of-type,
-    button[kind="formSubmit"] {
+    /* Alternative Submit button selector in case the above doesn't work */
+    button[kind="formSubmit"], 
+    .stButton:last-of-type > button {
         background-color: #000080 !important;
         color: white !important;
         border-color: #000080 !important;
