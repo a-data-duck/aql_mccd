@@ -24,18 +24,19 @@ st.markdown("""
     
     /* Main app container with border and yellow background outside */
     .main .block-container {
-        border: 1px solid #999;
-        padding: 20px;
-        background-color: white;
-        border-radius: 5px;
-        position: relative;
         max-width: 900px;
         margin: 0 auto;
+        border: 3px solid #333;
+        padding: 30px;
+        background-color: white;
+        border-radius: 8px;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
     .stApp {
         background-color: yellow !important;
-        padding: 20px;
+        padding: 30px;
     }
     
     /* Default font for all elements (Source Serif 4) */
@@ -56,9 +57,24 @@ st.markdown("""
     }
     
     /* Blue submit button */
-    form button[kind="primaryFormSubmit"] {
-        background-color: #000080 !important; /* Dark blue */
+    .stButton > button {
+        font-family: 'DM Sans', sans-serif !important;
+    }
+    
+    /* Dark blue submit button - more specific selector */
+    button[data-testid="baseButton-secondary"] {
+        background-color: #000080 !important; 
         color: white !important;
+    }
+    
+    /* Make sure the Submit button is dark blue with high specificity */
+    .stButton > button:nth-child(1),
+    .stButton > button[kind="primaryFormSubmit"],
+    .stButton > button:last-of-type,
+    button[kind="formSubmit"] {
+        background-color: #000080 !important;
+        color: white !important;
+        border-color: #000080 !important;
     }
     
     /* Existing styles */
