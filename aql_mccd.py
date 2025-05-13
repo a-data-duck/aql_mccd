@@ -13,83 +13,56 @@ st.markdown("""
 # Custom CSS with updated styling
 st.markdown("""
 <style>
-    /* Import fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
-    
-    /* Hide sidebar */
-    [data-testid="collapsedControl"] {display: none;}
-    section[data-testid="stSidebar"] {display: none;}
-    
-    /* Main app container with border and yellow background outside */
-    .main .block-container {
-        max-width: 60%;
-        margin: 0 auto;
-        border: 3px solid #333;
-        padding: 30px;
-        background-color: white;
-        border-radius: 8px;
-        position: relative;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .stApp {
-        background-color: yellow !important;
-        padding: 30px;
-    }
-    
-    /* Default font for all elements (Source Serif 4) */
-    body, .stApp, p, div, h1, h2, h3, span, .stMarkdown, .stTextInput, input {
-        font-family: 'Source Serif 4', serif !important;
-    }
-    
-    /* Bebas Neue for the intro text */
-    .bebas-text {
-        font-family: 'Bebas Neue', sans-serif !important;
-        font-size: 24px;
-        line-height: 1.2;
-    }
-    
-    /* DM Sans for example buttons */
-    .stButton > button {
-        font-family: 'DM Sans', sans-serif !important;
-    }
-    
-    /* DM Sans for example buttons */
-    .stButton > button {
-        font-family: 'DM Sans', sans-serif !important;
-    }
-    
-    /* Only make the Submit button dark blue - using the text content as selector */
-    .stButton > button:contains("Submit") {
-        background-color: #000080 !important;
-        color: white !important;
-        border-color: #000080 !important;
-    }
-    
-    /* Alternative Submit button selector in case the above doesn't work */
-    button[kind="formSubmit"], 
-    .stButton:last-of-type > button {
-        background-color: #000080 !important;
-        color: white !important;
-        border-color: #000080 !important;
-    }
-    
-    /* Existing styles */
-    .big-font {
-        font-size: 24px;
-        line-height: 1.5;
-        margin-bottom: 20px;
-    }
-    .small-italic {
-        font-size: 14px;
-        font-style: italic;
-        color: #666;
-        margin-top: 20px;
-    }
+  /* Import fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
+
+  /* Yellow background behind the app container */
+  .stApp {
+    background-color: yellow !important;
+    padding: 30px;
+  }
+
+  /* Centered, 60%-width white box with border */
+  .block-container {
+    max-width: 60% !important;
+    margin: 0 auto !important;
+    background-color: white !important;
+    border: 3px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 30px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+  }
+
+  /* Global font */
+  body, .stApp, p, div, h1, h2, h3, span, .stMarkdown, .stTextInput, input {
+    font-family: 'Source Serif 4', serif !important;
+  }
+
+  /* Fancy intro text */
+  .bebas-text {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  /* Buttons: default light gray */
+  .stButton > button:not([kind="formSubmit"]) {
+    background-color: #f0f0f0 !important;
+    color: #000 !important;
+    border-color: #ccc !important;
+  }
+
+  /* “Submit” button: dark blue */
+  button[kind="formSubmit"] {
+    background-color: #000080 !important;
+    color: white !important;
+    border-color: #000080 !important;
+  }
 </style>
 """, unsafe_allow_html=True)
+
 
 # Initialize session state for question
 if "question" not in st.session_state:
