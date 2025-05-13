@@ -130,6 +130,10 @@ def hybrid_search(query, base_url, top_k=5):
         
         # Now boost relevance scores based on keyword presence
         for match in matches:
+            if 'metadata' not in match or 'text' not in match.get('metadata', {}):
+                # Skip this match if it lacks required metadata
+                continue
+                
             text = match.get("metadata", {}).get("text", "").lower()
             
             # Calculate keyword boost factor with variable boosting
@@ -249,20 +253,37 @@ if st.button("Submit") or (st.session_state.question and not question_input):
                     st.markdown('<div class="debug-box">', unsafe_allow_html=True)
                     for i, match in enumerate(matches):
                         st.write(f"**Match {i+1}** (Score: {match['score']:.3f})")
-                        st.write(f"Text: {match['metadata']['text'][:200]}...")
-                        st.write(f"URL: {match['metadata']['url']}")
+                        # Safely check if metadata and text exist
+                        if 'metadata' in match:
+                            metadata = match['metadata']
+                            if 'text' in metadata:
+                                st.write(f"Text: {metadata['text'][:200]}...")
+                            else:
+                                st.write("Text: [Not available]")
+                            
+                            if 'url' in metadata:
+                                st.write(f"URL: {metadata['url']}")
+                            else:
+                                st.write("URL: [Not available]")
+                        else:
+                            st.write("Metadata not available")
                         st.write("---")
                     st.markdown('</div>', unsafe_allow_html=True)
                 
-                # Format context
+                # Format context with improved error handling
                 context = ""
                 sources = []
                 
                 for i, match in enumerate(matches):
+                    # Debug the structure of each match
+                    if 'metadata' not in match:
+                        st.warning(f"Match {i+1} is missing metadata. Full match data: {match}")
+                        continue
+                        
                     metadata = match.get("metadata", {})
                     text = metadata.get("text", "No text available")
-                    url = metadata.get("url", "")
-                    title = metadata.get("title", "")
+                    url = metadata.get("url", "No URL available")
+                    title = metadata.get("title", "No title available")
                     
                     context += f"\nDocument {i+1}:\n{text}\n"
                     sources.append((title, url))
