@@ -62,6 +62,12 @@ st.markdown("""
     color: #fff !important;
     border-color: #000080 !important;
   }
+  /* A hook: pick the button immediately AFTER a <span id="blue-btn"> */
+  .element-container:has(#blue-btn) + div button {
+    background-color: #000080 !important;
+    color: white !important;
+    border-color: #000080 !important;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -243,6 +249,7 @@ if question_input != st.session_state.question:
     st.session_state.question = question_input
 
 # Submit button
+st.markdown('<span id="blue-btn"></span>', unsafe_allow_html=True)
 if st.button("Submit") or (st.session_state.question and not question_input):
     if not st.session_state.question:
         st.warning("Please enter a question or select an example.")
