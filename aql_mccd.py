@@ -148,7 +148,7 @@ def generate_answer(question, context):
 Answer questions based ONLY on the provided context. If you don't know the answer, say so.
 Be specific about services, programs, and resources offered by Merced.
 When answering about services like wellness services, ALWAYS mention the specific provider if it appears in the context.
-Do NOT generate images or respond to questions unrelated to Calbright College."""
+Do NOT generate images or respond to questions unrelated to Merced College."""
     
     data = {
         "model": "gpt-4.1-mini",
