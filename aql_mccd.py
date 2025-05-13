@@ -21,12 +21,6 @@ st.markdown("""
         color: #666;
         margin-top: 20px;
     }
-    .debug-box {
-        font-size: 12px;
-        background-color: #f0f2f6;
-        padding: 10px;
-        border-radius: 5px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -86,17 +80,13 @@ def hybrid_search(query, base_url, top_k=5):
 
     # Step 2: Prepare keywords from query for boosting relevant results
     keywords = query.lower().split()
-    
-    # Enhance keyword matching for specific query types
+    # Add specific terms that might be important
     if "wellness" in query.lower() or "health" in query.lower():
         keywords.extend(["timelycare", "wellness", "services", "health"])
-    
     if "program" in query.lower() or "study" in query.lower():
         keywords.extend(["certificate", "program", "course"])
-    
-    # Enhanced tuition/fees keywords with stronger boosting
-    if "tuition" in query.lower() or "cost" in query.lower() or "fee" in query.lower() or "payment" in query.lower() or "price" in query.lower() or "money" in query.lower() or "financial" in query.lower():
-        keywords.extend(["tuition", "fee", "fees", "cost", "payment", "dollar", "price", "financial", "$", "enroll", "enrollment"])
+    if "free" in query.lower() or "cost" in query.lower():
+        keywords.extend(["tuition", "free", "cost", "financial"])
     
     headers = {
         "Content-Type": "application/json",
@@ -105,7 +95,7 @@ def hybrid_search(query, base_url, top_k=5):
     
     data = {
         "vector": embedding,
-        "top_k": top_k * 3,  # Retrieve more than needed for better recall and filtering
+        "top_k": top_k * 2,  # Retrieve more than needed for filtering
         "include_metadata": True
     }
     
@@ -125,42 +115,19 @@ def hybrid_search(query, base_url, top_k=5):
         result = response.json()
         matches = result.get("matches", [])
         
-        # Track direct hits for critical queries
-        direct_hits = []
-        
         # Now boost relevance scores based on keyword presence
         for match in matches:
-            if 'metadata' not in match or 'text' not in match.get('metadata', {}):
-                # Skip this match if it lacks required metadata
-                continue
-                
-            text = match.get("metadata", {}).get("text", "").lower()
+            text = match.get("metadata", {}).get("text_content", "").lower()
             
-            # Calculate keyword boost factor with variable boosting
+            # Calculate keyword boost factor
             keyword_matches = sum(1 for keyword in keywords if keyword in text)
-            
-            # Apply higher boost for tuition/fee/cost queries
-            if "tuition" in query.lower() or "cost" in query.lower() or "fee" in query.lower() or "payment" in query.lower() or "price" in query.lower():
-                keyword_boost = keyword_matches * 0.2  # Higher boost for tuition queries
-                
-                # Give massive boost for direct tuition-related matches
-                if any(term in text.lower() for term in ["tuition", "enrollment fee", "$46.00", "payment plan"]):
-                    match["score"] = max(match["score"], 0.95)  # Ensure these come to the top
-                    direct_hits.append(match)
-            else:
-                keyword_boost = keyword_matches * 0.1  # Normal boost for other queries
+            keyword_boost = keyword_matches * 0.1  # Each keyword match adds 0.1 to score
             
             # Apply the boost to the score (keeping it under 1.0)
             match["score"] = min(match["score"] + keyword_boost, 1.0)
         
         # Re-sort matches by adjusted score
         matches.sort(key=lambda x: x["score"], reverse=True)
-        
-        # If we found direct hits for tuition queries, prioritize them
-        if direct_hits and ("tuition" in query.lower() or "fee" in query.lower() or "cost" in query.lower()):
-            # Add the direct hits first, then other matches until we hit top_k
-            result_matches = direct_hits + [m for m in matches if m not in direct_hits]
-            return result_matches[:top_k]
         
         # Return top k matches
         return matches[:top_k]
@@ -176,13 +143,12 @@ def generate_answer(question, context):
         "Authorization": f"Bearer {OPENAI_API_KEY}"
     }
     
-    # Fixed system prompt to remove Calbright contradiction
+    # Enhanced prompt to focus on specific information
     system_prompt = """You are a helpful assistant for Merced College, a California community college.
 Answer questions based ONLY on the provided context. If you don't know the answer, say so.
-Be specific about services, programs, and resources offered by Merced College.
-When answering about costs, tuition, or fees, provide exact dollar amounts if they appear in the context.
+Be specific about services, programs, and resources offered by Merced.
 When answering about services like wellness services, ALWAYS mention the specific provider if it appears in the context.
-Do NOT generate information that isn't explicitly stated in the provided context."""
+Do NOT generate images or respond to questions unrelated to Merced College."""
     
     data = {
         "model": "gpt-4.1-mini",
@@ -219,9 +185,9 @@ def set_question(text):
 
 with col1:
     if st.button("Who provides wellness services?"):
-        set_question("Who provides wellness services at Merced College?")
-    if st.button("What is tuition at Merced College?"):
-        set_question("What is tuition at Merced College?")
+        set_question("Who provides wellness services at Merced?")
+    if st.button("What is tuition at Merced?"):
+        set_question("What is tuition at Merced?")
 with col2:
     if st.button("What programs are offered?"):
         set_question("What programs does Merced offer?")
@@ -248,42 +214,15 @@ if st.button("Submit") or (st.session_state.question and not question_input):
                     st.warning("No relevant information found.")
                     st.stop()
                 
-                # Add debug expander to see what content is being retrieved
-                with st.expander("Debug - Matching Documents", expanded=False):
-                    st.markdown('<div class="debug-box">', unsafe_allow_html=True)
-                    for i, match in enumerate(matches):
-                        st.write(f"**Match {i+1}** (Score: {match['score']:.3f})")
-                        # Safely check if metadata and text exist
-                        if 'metadata' in match:
-                            metadata = match['metadata']
-                            if 'text' in metadata:
-                                st.write(f"Text: {metadata['text'][:200]}...")
-                            else:
-                                st.write("Text: [Not available]")
-                            
-                            if 'url' in metadata:
-                                st.write(f"URL: {metadata['url']}")
-                            else:
-                                st.write("URL: [Not available]")
-                        else:
-                            st.write("Metadata not available")
-                        st.write("---")
-                    st.markdown('</div>', unsafe_allow_html=True)
-                
-                # Format context with improved error handling
+                # Format context
                 context = ""
                 sources = []
                 
                 for i, match in enumerate(matches):
-                    # Debug the structure of each match
-                    if 'metadata' not in match:
-                        st.warning(f"Match {i+1} is missing metadata. Full match data: {match}")
-                        continue
-                        
                     metadata = match.get("metadata", {})
-                    text = metadata.get("text", "No text available")
-                    url = metadata.get("url", "No URL available")
-                    title = metadata.get("title", "No title available")
+                    text = metadata.get("text_content", "No text available")
+                    url = metadata.get("url", "")
+                    title = metadata.get("title", "")
                     
                     context += f"\nDocument {i+1}:\n{text}\n"
                     sources.append((title, url))
