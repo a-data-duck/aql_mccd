@@ -21,6 +21,12 @@ st.markdown("""
         color: #666;
         margin-top: 20px;
     }
+    .debug-box {
+        font-size: 12px;
+        background-color: #f0f2f6;
+        padding: 10px;
+        border-radius: 5px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -80,13 +86,17 @@ def hybrid_search(query, base_url, top_k=5):
 
     # Step 2: Prepare keywords from query for boosting relevant results
     keywords = query.lower().split()
-    # Add specific terms that might be important
+    
+    # Enhance keyword matching for specific query types
     if "wellness" in query.lower() or "health" in query.lower():
         keywords.extend(["timelycare", "wellness", "services", "health"])
+    
     if "program" in query.lower() or "study" in query.lower():
         keywords.extend(["certificate", "program", "course"])
-    if "free" in query.lower() or "cost" in query.lower():
-        keywords.extend(["tuition", "free", "cost", "financial"])
+    
+    # Enhanced tuition/fees keywords with stronger boosting
+    if "tuition" in query.lower() or "cost" in query.lower() or "fee" in query.lower() or "payment" in query.lower() or "price" in query.lower() or "money" in query.lower() or "financial" in query.lower():
+        keywords.extend(["tuition", "fee", "fees", "cost", "payment", "dollar", "price", "financial", "$", "enroll", "enrollment"])
     
     headers = {
         "Content-Type": "application/json",
@@ -95,7 +105,7 @@ def hybrid_search(query, base_url, top_k=5):
     
     data = {
         "vector": embedding,
-        "top_k": top_k * 2,  # Retrieve more than needed for filtering
+        "top_k": top_k * 3,  # Retrieve more than needed for better recall and filtering
         "include_metadata": True
     }
     
@@ -115,19 +125,38 @@ def hybrid_search(query, base_url, top_k=5):
         result = response.json()
         matches = result.get("matches", [])
         
+        # Track direct hits for critical queries
+        direct_hits = []
+        
         # Now boost relevance scores based on keyword presence
         for match in matches:
             text = match.get("metadata", {}).get("text", "").lower()
             
-            # Calculate keyword boost factor
+            # Calculate keyword boost factor with variable boosting
             keyword_matches = sum(1 for keyword in keywords if keyword in text)
-            keyword_boost = keyword_matches * 0.1  # Each keyword match adds 0.1 to score
+            
+            # Apply higher boost for tuition/fee/cost queries
+            if "tuition" in query.lower() or "cost" in query.lower() or "fee" in query.lower() or "payment" in query.lower() or "price" in query.lower():
+                keyword_boost = keyword_matches * 0.2  # Higher boost for tuition queries
+                
+                # Give massive boost for direct tuition-related matches
+                if any(term in text.lower() for term in ["tuition", "enrollment fee", "$46.00", "payment plan"]):
+                    match["score"] = max(match["score"], 0.95)  # Ensure these come to the top
+                    direct_hits.append(match)
+            else:
+                keyword_boost = keyword_matches * 0.1  # Normal boost for other queries
             
             # Apply the boost to the score (keeping it under 1.0)
             match["score"] = min(match["score"] + keyword_boost, 1.0)
         
         # Re-sort matches by adjusted score
         matches.sort(key=lambda x: x["score"], reverse=True)
+        
+        # If we found direct hits for tuition queries, prioritize them
+        if direct_hits and ("tuition" in query.lower() or "fee" in query.lower() or "cost" in query.lower()):
+            # Add the direct hits first, then other matches until we hit top_k
+            result_matches = direct_hits + [m for m in matches if m not in direct_hits]
+            return result_matches[:top_k]
         
         # Return top k matches
         return matches[:top_k]
@@ -143,12 +172,13 @@ def generate_answer(question, context):
         "Authorization": f"Bearer {OPENAI_API_KEY}"
     }
     
-    # Enhanced prompt to focus on specific information
+    # Fixed system prompt to remove Calbright contradiction
     system_prompt = """You are a helpful assistant for Merced College, a California community college.
 Answer questions based ONLY on the provided context. If you don't know the answer, say so.
-Be specific about services, programs, and resources offered by Merced.
+Be specific about services, programs, and resources offered by Merced College.
+When answering about costs, tuition, or fees, provide exact dollar amounts if they appear in the context.
 When answering about services like wellness services, ALWAYS mention the specific provider if it appears in the context.
-Do NOT generate images or respond to questions unrelated to Merced College."""
+Do NOT generate information that isn't explicitly stated in the provided context."""
     
     data = {
         "model": "gpt-4.1-mini",
@@ -213,6 +243,16 @@ if st.button("Submit") or (st.session_state.question and not question_input):
                 if not matches:
                     st.warning("No relevant information found.")
                     st.stop()
+                
+                # Add debug expander to see what content is being retrieved
+                with st.expander("Debug - Matching Documents", expanded=False):
+                    st.markdown('<div class="debug-box">', unsafe_allow_html=True)
+                    for i, match in enumerate(matches):
+                        st.write(f"**Match {i+1}** (Score: {match['score']:.3f})")
+                        st.write(f"Text: {match['metadata']['text'][:200]}...")
+                        st.write(f"URL: {match['metadata']['url']}")
+                        st.write("---")
+                    st.markdown('</div>', unsafe_allow_html=True)
                 
                 # Format context
                 context = ""
