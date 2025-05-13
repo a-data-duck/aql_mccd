@@ -13,13 +13,18 @@ st.markdown("""
 # Custom CSS with updated styling
 st.markdown("""
 <style>
-  /* Yellow background behind the app container */
+  /* 1) Import fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
+
+  /* 2) Yellow backdrop outside the main container */
   .stApp {
     background-color: yellow !important;
     padding: 30px;
   }
 
-  /* Centered, 60%-width white box with border */
+  /* 3) Centered white box at 60% width with border */
   .block-container {
     max-width: 60% !important;
     margin: 0 auto !important;
@@ -30,42 +35,35 @@ st.markdown("""
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
   }
 
-  /* Global font */
-  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
+  /* 4) Font assignments */
   body, .stApp, p, div, h1, h2, h3, span, .stMarkdown, .stTextInput, input {
     font-family: 'Source Serif 4', serif !important;
   }
-
-  /* Bebas Neue for intro text */
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
   .bebas-text {
     font-family: 'Bebas Neue', sans-serif !important;
     font-size: 24px;
     line-height: 1.2;
   }
-
-  /* DM Sans for buttons */
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
   .stButton > button {
     font-family: 'DM Sans', sans-serif !important;
   }
 
-  /* 1) All buttons light gray by default */
-  .stButton > button:not([aria-label="Submit"]) {
+  /* 5) Default all buttons light gray */
+  .stButton > button {
     background-color: #f0f0f0 !important;
     color: #000 !important;
-    border: 1px solid #ccc !important;
+    border-color: #ccc !important;
   }
 
-  /* 2) Only the Submit button dark blue */
-  .stButton > button[aria-label="Submit"] {
+  /* 6) Override only the Submit button */
+  /* Use the Streamlit attribute for the form-submit button */
+  button[kind="formSubmit"] {
     background-color: #000080 !important;
     color: #fff !important;
-    border: 1px solid #000080 !important;
+    border-color: #000080 !important;
   }
 </style>
 """, unsafe_allow_html=True)
-
 
 # Initialize session state for question
 if "question" not in st.session_state:
