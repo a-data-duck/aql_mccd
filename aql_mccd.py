@@ -147,10 +147,11 @@ def generate_answer(question, context):
     system_prompt = """You are a helpful assistant for Merced College, a California community college.
 Answer questions based ONLY on the provided context. If you don't know the answer, say so.
 Be specific about services, programs, and resources offered by Merced.
-When answering about services like wellness services, ALWAYS mention the specific provider if it appears in the context."""
+When answering about services like wellness services, ALWAYS mention the specific provider if it appears in the context.
+Do NOT generate images or respond to questions unrelated to Calbright College."""
     
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4.1-mini",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer:"}
