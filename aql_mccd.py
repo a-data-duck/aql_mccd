@@ -271,7 +271,7 @@ if st.button("Submit") or (st.session_state.question and not question_input):
                 answer = generate_answer(st.session_state.question, context)
                 
                 # Display answer in larger font (without a heading)
-                st.markdown(f'<div class="big-font">{answer}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="big-font">{answer}</div><br><br>', unsafe_allow_html=True)
                 
                 # Display sources with smaller, italicized heading
                 st.markdown('<div class="small-italic">sources</div>', unsafe_allow_html=True)
