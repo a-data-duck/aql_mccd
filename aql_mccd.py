@@ -5,11 +5,61 @@ import requests
 # Hide sidebar
 st.set_page_config(page_title="Merced College Q&A", page_icon="🎓", initial_sidebar_state="collapsed")
 
-# Custom CSS to hide the sidebar completely
+# Add logo in the upper right corner
+st.markdown("""
+<img src="https://placehold.co/100x50?text=Logo" style="position: absolute; top: 20px; right: 20px; width: 80px; z-index: 1000;">
+""", unsafe_allow_html=True)
+
+# Custom CSS with updated styling
 st.markdown("""
 <style>
+    /* Import fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
+    
+    /* Hide sidebar */
     [data-testid="collapsedControl"] {display: none;}
     section[data-testid="stSidebar"] {display: none;}
+    
+    /* Main app container with border and yellow background outside */
+    .main .block-container {
+        border: 1px solid #999;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        position: relative;
+    }
+    
+    .stApp {
+        background-color: yellow !important;
+        padding: 10px;
+    }
+    
+    /* Default font for all elements (Source Serif 4) */
+    body, .stApp, p, div, h1, h2, h3, span, .stMarkdown, .stTextInput, input {
+        font-family: 'Source Serif 4', serif !important;
+    }
+    
+    /* Bebas Neue for the intro text */
+    .bebas-text {
+        font-family: 'Bebas Neue', sans-serif !important;
+        font-size: 24px;
+        line-height: 1.2;
+    }
+    
+    /* DM Sans for example buttons */
+    .stButton > button {
+        font-family: 'DM Sans', sans-serif !important;
+    }
+    
+    /* Blue submit button */
+    form button[kind="primaryFormSubmit"] {
+        background-color: blue !important;
+        color: white !important;
+    }
+    
+    /* Existing styles */
     .big-font {
         font-size: 24px;
         line-height: 1.5;
@@ -30,6 +80,9 @@ if "question" not in st.session_state:
 
 # Set title
 st.title("Merced College Q&A")
+
+# Main text with Bebas Neue font
+st.markdown('<div class="bebas-text">Ask questions about Merced College\'s programs, services, and more.</div>', unsafe_allow_html=True)
 
 # Configure API keys (now hidden from sidebar)
 OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
@@ -173,9 +226,6 @@ Do NOT generate images or respond to questions unrelated to Merced College."""
     return result["choices"][0]["message"]["content"]
 
 # Main interface
-st.write("Ask questions about Merced College's programs, services, and more.")
-
-# Example questions moved to main interface as buttons
 st.write("Try an example:")
 col1, col2 = st.columns(2)
 
