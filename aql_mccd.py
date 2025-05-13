@@ -7,7 +7,7 @@ st.set_page_config(page_title="Merced College Q&A", page_icon="🎓", initial_si
 
 # Add logo in the upper right corner
 st.markdown("""
-<img src="https://placehold.co/100x50?text=Logo" style="position: absolute; top: 20px; right: 20px; width: 80px; z-index: 1000;">
+<img src="https://mvdataappstorageuscaprod.blob.core.windows.net/medialibrary-030d9bbc552a4bb7af67b52fea9fce90-r/837e62db07e24c4995e59cb5c707c6ff/837e62db07e24c4995e59cb5c707c6ff/Large/MCC_FNL_Logos.png?text=Logo" style="position: absolute; top: 20px; right: 20px; width: 80px; z-index: 1000;">
 """, unsafe_allow_html=True)
 
 # Custom CSS with updated styling
@@ -20,7 +20,7 @@ st.markdown("""
 
   /* 2) Yellow backdrop outside the main container */
   .stApp {
-    background-color: yellow !important;
+    background-color: #C38F00 !important;
     padding: 30px;
   }
 
@@ -29,7 +29,7 @@ st.markdown("""
     max-width: 60% !important;
     margin: 0 auto !important;
     background-color: white !important;
-    border: 3px solid #333 !important;
+    border: 1px solid #333 !important;
     border-radius: 8px !important;
     padding: 30px !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
@@ -58,9 +58,9 @@ st.markdown("""
   /* 6) Override only the Submit button */
   /* Use the Streamlit attribute for the form-submit button */
   button[kind="formSubmit"] {
-    background-color: #000080 !important;
+    background-color: #00205C !important;
     color: #fff !important;
-    border-color: #000080 !important;
+    border-color: #00205C !important;
   }
   /* A hook: pick the button immediately AFTER a <span id="blue-btn"> */
   .element-container:has(#blue-btn) + div button {
