@@ -77,6 +77,7 @@ if "question" not in st.session_state:
     st.session_state.question = ""
 
 # Set title
+st.title(" ")
 st.title("Merced College Q&A")
 
 # Main text with Bebas Neue font
