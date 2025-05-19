@@ -8,6 +8,7 @@ st.set_page_config(page_title="Merced College Q&A", page_icon="🎓", initial_si
 # Add logo in the upper right corner
 st.markdown("""
 <img src="https://coursedog-images-public.s3.us-east-2.amazonaws.com/undefined/MC-primary-logo.png?text=Logo" style="position: absolute; top: 40px; right: 20px; width: 80px; z-index: 1000;">
+<img src="https://images.squarespace-cdn.com/content/v1/656e9dc18baa570fb2025966/7bd67e53-0a11-4847-b106-30e1b9e3f42c/AQL-logo-new-48px2x.png" style="position: absolute; top: 40px; left: 20px; width: 80px; z-index: 1000;">
 """, unsafe_allow_html=True)
 
 # Custom CSS with updated styling
@@ -292,3 +293,11 @@ if st.button("Submit") or (st.session_state.question and not question_input):
             st.error(f"An error occurred: {str(e)}")
             st.write("Please try again later.")
             st.write(f"Error details: {str(e)}")
+
+st.markdown("""
+<div style="position: absolute; top: 120px; left: 0; right: 0; text-align: center; font-size: 12px; z-index: 1000; color: #FEFEFE; font-style: italic;">
+  <p style="margin: 0; padding: 0;">an AQL Labs proof-of-concept</p>
+  <p style="margin: 0; padding: 0;">operational through June 30, 2025</p>
+  <br>
+</div>
+""", unsafe_allow_html=True)
