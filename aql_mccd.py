@@ -8,7 +8,7 @@ st.set_page_config(page_title="Merced College Q&A", page_icon="🎓", initial_si
 # Add logo in the upper right corner
 st.markdown("""
 <img src="https://coursedog-images-public.s3.us-east-2.amazonaws.com/undefined/MC-primary-logo.png?text=Logo" style="position: absolute; top: 40px; right: 20px; width: 80px; z-index: 1000;">
-<img src="https://images.squarespace-cdn.com/content/v1/656e9dc18baa570fb2025966/7bd67e53-0a11-4847-b106-30e1b9e3f42c/AQL-logo-new-48px2x.png" style="position: absolute; top: 70px; left: 20px; width: 80px; z-index: 1000;">
+<img src="https://images.squarespace-cdn.com/content/v1/656e9dc18baa570fb2025966/7bd67e53-0a11-4847-b106-30e1b9e3f42c/AQL-logo-new-48px2x.png" style="position: absolute; top: 70px; left: 20px; width: 80px; z-index: 1000; margin-top: 0px;">
 """, unsafe_allow_html=True)
 
 # Custom CSS with updated styling
